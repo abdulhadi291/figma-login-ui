@@ -1,15 +1,15 @@
+import 'package:figma_login/login.dart';
 import 'package:figma_login/reels/reels_view.dart';
-import 'package:figma_login/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 
-class Login extends StatefulWidget {
+class Signup extends StatefulWidget {
   @override
-  State<Login> createState() => _LoginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup> {
   bool isPasswordvisible = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -17,22 +17,23 @@ class _LoginState extends State<Login> {
   final String validEmail = 'example123@gmail.com';
   final String validPassword = '12345678';
 
-  Login()  async {
+  Signup()  async {
     // final String email = emailController.text;
     // final String password = passwordController.text;
 
 try {
-  final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+  final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
     email: emailController.text,
     password: passwordController.text,
-    
   );
 } on FirebaseAuthException catch (e) {
-  if (e.code == 'user-not-found') {
-    print('No user found for that email.');
-  } else if (e.code == 'wrong-password') {
-    print('Wrong password provided for that user.');
+  if (e.code == 'weak-password') {
+    print('The password provided is too weak.');
+  } else if (e.code == 'email-already-in-use') {
+    print('The account already exists for that email.');
   }
+} catch (e) {
+  print(e);
 }
 
     // if (email == validEmail && password == validPassword) {
@@ -66,7 +67,7 @@ try {
         ),
         Padding(
           padding: const EdgeInsets.all(14.0),
-          child: Text('Login',
+          child: Text('Signup',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         ),
         Padding(
@@ -100,7 +101,7 @@ try {
                 },
               ),
               labelStyle: TextStyle(color: Colors.grey),
-              labelText: 'Password',
+              labelText: 'Signup',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -120,7 +121,7 @@ try {
                 ),
               ),
               onPressed: () {
-                Login();
+                Signup();
               },
               child: Text(
                 'Login',
@@ -132,8 +133,7 @@ try {
               ),
             ),
             SizedBox(width: 20,),
-
-            ElevatedButton(
+             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color.fromARGB(255, 247, 121, 134),
                 shape: RoundedRectangleBorder(
@@ -142,12 +142,12 @@ try {
               ),
               onPressed: () {
                 Navigator.of(context).push(
-    MaterialPageRoute(builder: (context) =>  Signup()),
+    MaterialPageRoute(builder: (context) =>  Login()),
   );
 
               },
               child: Text(
-                'Dont have an account Signup',
+                'Already have an accont Signup',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
